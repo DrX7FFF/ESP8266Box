@@ -27,6 +27,7 @@
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.txtMessage = new System.Windows.Forms.TextBox();
 			this.tabControl = new System.Windows.Forms.TabControl();
+			this.tabPageTag = new System.Windows.Forms.TabPage();
 			this.tabPageParam = new System.Windows.Forms.TabPage();
 			this.chkConnect = new System.Windows.Forms.CheckBox();
 			this.button2 = new System.Windows.Forms.Button();
@@ -35,8 +36,8 @@
 			this.lblPort = new System.Windows.Forms.Label();
 			this.txtIP = new System.Windows.Forms.TextBox();
 			this.lblIP = new System.Windows.Forms.Label();
-			this.tabPageTag = new System.Windows.Forms.TabPage();
 			this.eSP8266DebugBindingSource = new System.Windows.Forms.BindingSource(this.components);
+			this.btnNotify = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
@@ -82,6 +83,17 @@
 			this.tabControl.SelectedIndex = 0;
 			this.tabControl.Size = new System.Drawing.Size(705, 338);
 			this.tabControl.TabIndex = 9;
+			// 
+			// tabPageTag
+			// 
+			this.tabPageTag.Controls.Add(this.splitContainer1);
+			this.tabPageTag.Location = new System.Drawing.Point(4, 22);
+			this.tabPageTag.Name = "tabPageTag";
+			this.tabPageTag.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPageTag.Size = new System.Drawing.Size(697, 312);
+			this.tabPageTag.TabIndex = 1;
+			this.tabPageTag.Text = "Tag";
+			this.tabPageTag.UseVisualStyleBackColor = true;
 			// 
 			// tabPageParam
 			// 
@@ -159,26 +171,26 @@
 			this.lblIP.TabIndex = 10;
 			this.lblIP.Text = "IP";
 			// 
-			// tabPageTag
-			// 
-			this.tabPageTag.Controls.Add(this.splitContainer1);
-			this.tabPageTag.Location = new System.Drawing.Point(4, 22);
-			this.tabPageTag.Name = "tabPageTag";
-			this.tabPageTag.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPageTag.Size = new System.Drawing.Size(697, 312);
-			this.tabPageTag.TabIndex = 1;
-			this.tabPageTag.Text = "Tag";
-			this.tabPageTag.UseVisualStyleBackColor = true;
-			// 
 			// eSP8266DebugBindingSource
 			// 
 			this.eSP8266DebugBindingSource.DataSource = typeof(ESPBox.ESP8266Debug);
+			// 
+			// btnNotify
+			// 
+			this.btnNotify.Location = new System.Drawing.Point(460, 8);
+			this.btnNotify.Name = "btnNotify";
+			this.btnNotify.Size = new System.Drawing.Size(111, 23);
+			this.btnNotify.TabIndex = 18;
+			this.btnNotify.Text = "Notify New Version";
+			this.btnNotify.UseVisualStyleBackColor = true;
+			this.btnNotify.Click += new System.EventHandler(this.btnNotify_Click);
 			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(705, 369);
+			this.Controls.Add(this.btnNotify);
 			this.Controls.Add(this.button2);
 			this.Controls.Add(this.chkConnect);
 			this.Controls.Add(this.button1);
@@ -217,6 +229,7 @@
 		private System.Windows.Forms.TabPage tabPageTag;
 		private System.Windows.Forms.CheckBox chkConnect;
 		private System.Windows.Forms.BindingSource eSP8266DebugBindingSource;
+		private System.Windows.Forms.Button btnNotify;
 	}
 }
 

@@ -53,5 +53,9 @@ namespace ESPBox {
 			myesp.onMessage -= onMessage;
 			myesp.stop();
 		}
+
+		private void btnNotify_Click(object sender, EventArgs e) {
+			myesp.notifyNewVersion();
+		}
 	}
 }

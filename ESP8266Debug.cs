@@ -2,6 +2,10 @@
 using System.Threading;
 using System.Collections.Generic;
 using System;
+using System.Net;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.IO;
 
 namespace ESPBox {
 	public class ESP8266Tag {
@@ -46,6 +50,7 @@ namespace ESPBox {
 	public class ESP8266Debug {
 		Thread espThread = null;
 		Socket tcpClient;
+		HttpListener httpServer;
 		string ip;
 		int port;
 		static ManualResetEvent exit = new ManualResetEvent(false);
@@ -102,6 +107,10 @@ namespace ESPBox {
 			}
 		}
 
+		public void notifyNewVersion() {
+			send(1);
+		}
+
 		private void ThreadESP() {
 			byte[] buffer = new byte[9];
 			exit.Reset();
@@ -139,6 +148,59 @@ namespace ESPBox {
 				tcpClient = null;
 			} while (!exit.WaitOne(0));
 			newMessage("[System] stop");
+		}
+
+		private void startUpdateServer(){
+			// Create a listener.
+			HttpListener listener = new HttpListener();
+			listener.Prefixes.Add("http://+:80/");
+			listener.Start();
+			// Note: The GetContext method blocks while waiting for a request. 
+//			HttpListenerContext context = listener.GetContext();
+//			HttpListenerRequest request = context.Request;
+			// Obtain a response object.
+//			HttpListenerResponse response = context.Response;
+
+/*
+			response.ContentLength64 = fs.Length;
+			response.SendChunked = false;
+			response.ContentType = System.Net.Mime.MediaTypeNames.Application.Octet;
+			response.ContentType += System.Net.Mime.MediaTypeNames.
+			response.AddHeader("Content-disposition", "attachment; filename=largefile.EXE");
+*/
+			HttpListenerResponse response;
+			try {
+				HttpListenerContext context = listener.GetContext();
+
+				response = context.Response;
+				response.ContentType = System.Net.Mime.MediaTypeNames.Application.Octet;
+				using (FileStream fs = File.OpenRead(@"c:\downloadsample\testfile.pdf")) {
+
+					byte[] buffer = new byte[32768];
+					int read;
+					while ((read = fs.Read(buffer, 0, buffer.Length)) > 0) {
+						response.OutputStream.Write(buffer, 0, read);
+					}
+				}
+
+			}
+			finally {
+				if (response != null)
+					response.Close();
+			}
+/*	
+			// Construct a response.
+			string responseString = "<HTML><BODY> Hello world!</BODY></HTML>";
+			byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
+			// Get a response stream and write the response to it.
+			response.ContentLength64 = buffer.Length;
+			System.IO.Stream output = response.OutputStream;
+			output.Write(buffer,0,buffer.Length);
+			// You must close the output stream.
+			output.Close();
+ * */
+			listener.Close();
+			listener.Stop();
 		}
 	}
 }
