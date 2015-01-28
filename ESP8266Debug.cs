@@ -49,6 +49,7 @@ namespace ESPBox {
 
 	public class ESP8266Debug {
 		Thread espThread = null;
+		Thread updateThread = null;
 		Socket tcpClient;
 		HttpListener httpServer;
 		string ip;
@@ -89,6 +90,14 @@ namespace ESPBox {
 			espThread = new Thread(new ThreadStart(ThreadESP));
 			espThread.Start();
 		}
+
+		public void startUpdate() {
+			if (updateThread != null)
+				return;
+			updateThread = new Thread(new ThreadStart(startUpdateServer));
+			updateThread.Start();
+		}
+
 
 		public void stop() {
 			if (espThread == null)
@@ -153,8 +162,6 @@ namespace ESPBox {
 		private void startUpdateServer(){
 			// Create a listener.
 			HttpListener listener = new HttpListener();
-			listener.Prefixes.Add("http://+:80/");
-			listener.Start();
 			// Note: The GetContext method blocks while waiting for a request. 
 //			HttpListenerContext context = listener.GetContext();
 //			HttpListenerRequest request = context.Request;
@@ -168,13 +175,20 @@ namespace ESPBox {
 			response.ContentType += System.Net.Mime.MediaTypeNames.
 			response.AddHeader("Content-disposition", "attachment; filename=largefile.EXE");
 */
-			HttpListenerResponse response;
+			HttpListenerResponse response = null;
 			try {
+				listener.Prefixes.Add("http://+:80/");
+				listener.Start();
 				HttpListenerContext context = listener.GetContext();
 
+				HttpListenerRequest request = context.Request;
 				response = context.Response;
 				response.ContentType = System.Net.Mime.MediaTypeNames.Application.Octet;
-				using (FileStream fs = File.OpenRead(@"c:\downloadsample\testfile.pdf")) {
+				using (FileStream fs = File.OpenRead(@"c:\setup.log")) {
+					response.ContentLength64 = fs.Length;
+					response.SendChunked = false;
+					response.ContentType = System.Net.Mime.MediaTypeNames.Application.Octet;
+					response.AddHeader("Content-disposition", "attachment; filename=setup.log");
 
 					byte[] buffer = new byte[32768];
 					int read;
@@ -183,6 +197,9 @@ namespace ESPBox {
 					}
 				}
 
+			}
+			catch (Exception e) {
+				Console.WriteLine(e.ToString());
 			}
 			finally {
 				if (response != null)
@@ -200,7 +217,6 @@ namespace ESPBox {
 			output.Close();
  * */
 			listener.Close();
-			listener.Stop();
 		}
 	}
 }

@@ -57,5 +57,9 @@ namespace ESPBox {
 		private void btnNotify_Click(object sender, EventArgs e) {
 			myesp.notifyNewVersion();
 		}
+
+		private void button3_Click(object sender, EventArgs e) {
+			myesp.startUpdate();
+		}
 	}
 }
